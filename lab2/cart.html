@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Flower power!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="images/flower-icon.png" />
+    <link rel="stylesheet" type="text/css" href="vendor/normalize.css">
+    <link rel="stylesheet" type="text/css" href="styles/main.css">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+
+
+<body class="content body-header-fixed">
+    <header class="header header-fixed primary-color-bg">
+        <nav class="navigation container">
+            <div class="menu">
+                <a href="index.html" class="link menu-item">Home</a>
+                <a href="order.html" class="link menu-item">Order</a>
+                <a href="index.html" class="link">
+                    <img class="scaled-image scaled-image-fixed" src="images/logo.svg" alt="Company logo">
+                </a>
+                <a href="#" class="link menu-item">Contact us</a>
+                <a href="cart.html" class="link menu-item link-active cart-menu">
+                    <img src="images/cart-icon.svg" alt="Cart icon">
+                    <div class="cart-menu-status">
+                        <div id="cart-items">0</div>
+                        <div>items</div>
+                    </div>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div id="main-content" class="container centered-container">
+            <h1 class="decorated-title font-secondary main-color"><span class="main-color-emphasized">Shopping
+                    cart</span> items</h1>
+            <div class="separator"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="menu menu-distributed">
+                <div class="infobox infobox-marginless infobox-copyright">
+                    <h4 class="infobox-title infobox-title-secondary-color main-color-emphasized">
+                        Copy this as much as you like
+                    </h4>
+                </div>
+                <div class="infobox infobox-marginless infobox-flower">
+                    <h4 class="infobox-title infobox-title-secondary-color main-color-emphasized">
+                        Flower power
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <template id="cart-template-header">
+        <div class="cart-header">
+            <div class="cart-header-title">Product</div>
+            <div class="cart-header-title">Price</div>
+            <div class="cart-header-title">Quantity</div>
+            <div class="cart-header-title">Total price</div>
+        </div>
+    </template>
+    <template id="cart-template-item">
+        <div class="cart-item">
+            <div class="cart-item-title">Tulips</div>
+            <div class="cart-item-price">15 kn</div>
+            <div class="cart-item-quantity-div">
+                <input type="number" class="cart-item-quantity"></input>
+            </div>
+            <div class="cart-item-total-price">15 kn</div>
+        </div>
+    </template>
+    <template id="cart-total-template">
+        <div class="cart-total">
+            <div>Total:
+            </div>
+            <div id="cart-total-value">
+            </div>
+        </div>
+    </template>
+    <script>
+
+        var main = document.querySelector('#main-content');
+        main.appendChild(document.querySelector('#cart-template-header').content.cloneNode(true));
+
+        function updateCounter() {
+            let cart_items = document.querySelector('#cart-items');
+            let cart = localStorage.getItem("cart");
+            if (cart === undefined || cart === null) {
+                cart = [];
+                cart = JSON.stringify(cart);
+                localStorage.setItem("cart", cart);
+            }
+            cart = JSON.parse(cart);
+            console.log(cart);
+            let length = 0;
+            for (item of cart) {
+                length += item.count;
+            }
+            cart_items.textContent = length;
+        }
+
+        async function updateItems() {
+            let cart = localStorage.getItem("cart");
+            let totalElement = document.querySelector('#cart-total-template').content.cloneNode(true);
+            let total = 0;
+            if (cart) {
+
+                cart = JSON.parse(cart);
+                let cartItemTemplate = document.querySelector('#cart-template-item');
+
+                for (let i = 0; i < cart.length; i++) {
+                    let id = cart[i].data_id;
+                    let response = await fetch(`https://web1lab2.azurewebsites.net/products/${id}`);
+                    let product = await response.json();
+                    let item = cartItemTemplate.content.cloneNode(true);
+                    let itemTitle = item.querySelector('.cart-item-title');
+                    itemTitle.textContent = product.name;
+                    let itemPrice = item.querySelector('.cart-item-price');
+                    itemPrice.textContent = product.price + " kn";
+                    let itemQuantity = item.querySelector('.cart-item-quantity');
+                    itemQuantity.value = cart[i].count;
+                    let itemTotal = item.querySelector('.cart-item-total-price');
+                    itemTotal.textContent = cart[i].count * product.price + " kn";
+                    total += cart[i].count * product.price;
+
+                    main.appendChild(item);
+                }
+            }
+
+            totalElement.querySelector('#cart-total-value').textContent = total;
+            main.appendChild(totalElement);
+
+        }
+
+        updateCounter();
+
+
+
+        updateItems();
+
+
+    </script>
+</body>
+
+</html>

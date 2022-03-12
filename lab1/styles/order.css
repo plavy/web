@@ -1,0 +1,68 @@
+.container-grid-three {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+@media only screen and (max-width: 1020px) {
+    .container-grid-three {
+      display: block;
+    }
+  }
+
+.showcase {
+    width: 300px;
+    margin: auto;
+}
+
+.flower-image {
+    margin: auto;
+    display: block;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.desc {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.holder {
+    margin: auto;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #e0aacd;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.lab-image {
+    margin: 0px auto;
+    display: block;
+    height: 100px;
+}
+
+.text-holder {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.lab-title {
+    font-size: 16px;
+    margin: 0px;
+}
+
+.lab-subtitle {
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    margin: 5px 0px;
+    font-weight: normal;
+}
+
+.lab-button {
+    background-color: #e0aacd;
+    border-radius: 3px;
+    border-style: none;
+    padding: 7px 6px;
+    font-size: 13px;
+}
